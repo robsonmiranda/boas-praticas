@@ -1,23 +1,16 @@
 package br.com.alura.service;
 
-import br.com.alura.Model.Abrigo;
 import br.com.alura.Model.Pet;
 import br.com.alura.client.ClientHttpConfiguration;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class PetService {
 
@@ -51,10 +44,12 @@ public class PetService {
     }
 
     public void importarPets() throws IOException, InterruptedException {
+        Scanner sc = new Scanner(System.in);
         System.out.println("Digite o id ou nome do abrigo:");
-        String idOuNome = new Scanner(System.in).nextLine();
+        String idOuNome = sc.nextLine();
         System.out.println("Digite o nome do arquivo CSV:");
-        String nomeArquivo = new Scanner(System.in).nextLine();
+        String nomeArquivo = sc.nextLine();
+        sc.close();
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(nomeArquivo));
@@ -70,7 +65,7 @@ public class PetService {
             int idade = Integer.parseInt(campos[3]);
             String cor = campos[4];
             Float peso = Float.parseFloat(campos[5]);
-            Pet pet = new Pet(tipo, peso, nome, raca, idade, cor);
+            Pet pet = new Pet(tipo, nome, raca, idade, cor, peso);
             String uri = "http://localhost:8081/abrigos/" + idOuNome + "/pets";
             HttpResponse<String> response = client.dispararRequisicaoPost(uri, pet);
             int statusCode = response.statusCode();
